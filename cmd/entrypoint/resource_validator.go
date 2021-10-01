@@ -7,10 +7,11 @@ import (
 	"os"
 
 	"github.com/datawire/ambassador/v2/pkg/kates"
+	"github.com/datawire/ambassador/v2/pkg/kates/k8sresourcetypes"
 )
 
 type resourceValidator struct {
-	invalid        map[string]*kates.Unstructured
+	invalid        map[string]*k8sresourcetypes.Unstructured
 	katesValidator *kates.Validator
 }
 
@@ -39,11 +40,11 @@ func newResourceValidator() (*resourceValidator, error) {
 
 	return &resourceValidator{
 		katesValidator: katesValidator,
-		invalid:        map[string]*kates.Unstructured{},
+		invalid:        map[string]*k8sresourcetypes.Unstructured{},
 	}, nil
 }
 
-func (v *resourceValidator) isValid(ctx context.Context, un *kates.Unstructured) bool {
+func (v *resourceValidator) isValid(ctx context.Context, un *k8sresourcetypes.Unstructured) bool {
 	key := string(un.GetUID())
 	err := v.katesValidator.Validate(ctx, un)
 	if err != nil {
@@ -58,8 +59,8 @@ func (v *resourceValidator) isValid(ctx context.Context, un *kates.Unstructured)
 	}
 }
 
-func (v *resourceValidator) getInvalid() []*kates.Unstructured {
-	var result []*kates.Unstructured
+func (v *resourceValidator) getInvalid() []*k8sresourcetypes.Unstructured {
+	var result []*k8sresourcetypes.Unstructured
 	for _, inv := range v.invalid {
 		result = append(result, inv)
 	}
